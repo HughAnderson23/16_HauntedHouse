@@ -18,25 +18,73 @@ const scene = new THREE.Scene()
 /*
 * Textures
 */
+const textureLoader = new THREE.TextureLoader()
 
+const floorAlphaTexture = textureLoader.load('./floor/alpha.jpg')
+const floorColorTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_diff_1k.jpg')
+const floorARMTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_arm_1k.jpg')
+const floorNormalTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_nor_gl_1k.jpg')
+const floorDisplacementTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_disp_1k.jpg')
 
+floorColorTexture.colorSpace = THREE.SRGBColorSpace
+
+floorColorTexture.repeat.set(8,8)
+floorARMTexture.repeat.set(8,8)
+floorNormalTexture.repeat.set(8,8)
+floorDisplacementTexture.repeat.set(8,8)
+
+floorColorTexture.wrapS = THREE.RepeatWrapping
+floorARMTexture.wrapS = THREE.RepeatWrapping
+floorNormalTexture.wrapS = THREE.RepeatWrapping
+floorDisplacementTexture.wrapS = THREE.RepeatWrapping
+
+floorColorTexture.wrapT = THREE.RepeatWrapping
+floorARMTexture.wrapT = THREE.RepeatWrapping
+floorNormalTexture.wrapT = THREE.RepeatWrapping
+floorDisplacementTexture.wrapT = THREE.RepeatWrapping
+
+const wallsColorTexture = textureLoader.load('./walls/castle_brick_broken_06_1k/castle_brick_broken_06_diff_1k.jpg')
+const wallsARMTexture = textureLoader.load('./walls/castle_brick_broken_06_1k/castle_brick_broken_06_arm_1k.jpg')
+const wallsNormalTexture = textureLoader.load('./walls/castle_brick_broken_06_1k/castle_brick_broken_06_nor_gl_1k.jpg')
+
+wallsColorTexture.colorSpace = THREE.SRGBColorSpace
 
 /**
  * Geometries
  */
 const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(20, 20),
-    new THREE.MeshStandardMaterial({ roughness: 0.7 })
+    new THREE.PlaneGeometry(20, 20, 100, 100),
+    new THREE.MeshStandardMaterial({
+        alphaMap: floorAlphaTexture,
+        transparent: true,
+        map: floorColorTexture,
+        aoMap: floorARMTexture,
+        roughnessMap: floorARMTexture,
+        metalnessMap: floorARMTexture,
+        normalMap: floorNormalTexture,
+        displacementMap: floorDisplacementTexture,
+        displacementScale: 0.3,
+        displacementBias: -0.128
+     })
 )
 floor.rotation.x = -Math.PI * 0.5
 scene.add(floor)
+
+gui.add(floor.material, 'displacementScale').min(0).max(1).step(0.001).name('floorDisplacementScale')
+gui.add(floor.material, 'displacementBias').min(-1).max(1).step(0.001).name('floorDisplacementBias')
 
 const house = new THREE.Group()
 scene.add(house)
 
 const walls = new THREE.Mesh(
     new THREE.BoxGeometry(4, 2.5, 4),
-    new THREE.MeshStandardMaterial()
+    new THREE.MeshStandardMaterial({
+        map: wallsColorTexture,
+        aoMap: wallsARMTexture,
+        roughnessMap: wallsARMTexture,
+        metalnessMap: wallsARMTexture,
+        normalMap: wallsNormalTexture
+    })
 )
 walls.position.y += 2.5/2
 house.add(walls)
