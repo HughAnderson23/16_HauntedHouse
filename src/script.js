@@ -1,7 +1,9 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import {Sky} from 'three/addons/objects/Sky.js'
 import { Timer } from 'three/addons/misc/Timer.js'
 import GUI from 'lil-gui'
+
 
 /**
  * Base
@@ -20,11 +22,11 @@ const scene = new THREE.Scene()
 */
 const textureLoader = new THREE.TextureLoader()
 
-const floorAlphaTexture = textureLoader.load('./floor/alpha.jpg')
-const floorColorTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_diff_1k.jpg')
-const floorARMTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_arm_1k.jpg')
-const floorNormalTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_nor_gl_1k.jpg')
-const floorDisplacementTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_disp_1k.jpg')
+const floorAlphaTexture = textureLoader.load('./floor/alpha.webp')
+const floorColorTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_diff_1k.webp')
+const floorARMTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_arm_1k.webp')
+const floorNormalTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_nor_gl_1k.webp')
+const floorDisplacementTexture = textureLoader.load('./floor/coast_sand_rocks_02_1k/coast_sand_rocks_02_disp_1k.webp')
 
 floorColorTexture.colorSpace = THREE.SRGBColorSpace
 
@@ -50,8 +52,8 @@ const wallsNormalTexture = textureLoader.load('./walls/castle_brick_broken_06_1k
 wallsColorTexture.colorSpace = THREE.SRGBColorSpace
 
 const roofColorTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_diff_1k.jpg')
-const roofARMTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_arm_1k.jpg')
-const roofNormalTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_nor_gl_1k.jpg')
+const roofARMTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_arm_1k.webp')
+const roofNormalTexture = textureLoader.load('./roof/roof_slates_02_1k/roof_slates_02_nor_gl_1k.webp')
 
 roofColorTexture.colorSpace = THREE.SRGBColorSpace
 
@@ -63,9 +65,9 @@ roofColorTexture.wrapS = THREE.RepeatWrapping
 roofARMTexture.wrapS = THREE.RepeatWrapping
 roofNormalTexture.wrapS = THREE.RepeatWrapping
 
-const bushesColorTexture = textureLoader.load('./bushes/leaves_forest_ground_1k/leaves_forest_ground_diff_1k.jpg')
-const bushesARMTexture = textureLoader.load('./bushes/leaves_forest_ground_1k/leaves_forest_ground_arm_1k.jpg')
-const bushesNormalTexture = textureLoader.load('./bushes/leaves_forest_ground_1k/leaves_forest_ground_nor_gl_1k.jpg')
+const bushesColorTexture = textureLoader.load('./bushes/leaves_forest_ground_1k/leaves_forest_ground_diff_1k.webp')
+const bushesARMTexture = textureLoader.load('./bushes/leaves_forest_ground_1k/leaves_forest_ground_arm_1k.webp')
+const bushesNormalTexture = textureLoader.load('./bushes/leaves_forest_ground_1k/leaves_forest_ground_nor_gl_1k.webp')
 
 bushesColorTexture.colorSpace = THREE.SRGBColorSpace
 
@@ -78,7 +80,7 @@ bushesARMTexture.wrapS = THREE.RepeatWrapping
 bushesNormalTexture.wrapS = THREE.RepeatWrapping
 
 const gravesColorTexture = textureLoader.load('./graves/plastered_stone_wall_1k/plastered_stone_wall_diff_1k.jpg')
-const gravesARMTexture = textureLoader.load('./graves/plastered_stone_wall_1k/plastered_stone_wall_arm_1k.jpg')
+const gravesARMTexture = textureLoader.load('./graves/plastered_stone_wall_1k/plastered_stone_wall_arm_1k.webp')
 const gravesNormalTexture = textureLoader.load('./graves/plastered_stone_wall_1k/plastered_stone_wall_nor_gl_1k.jpg')
 
 gravesColorTexture.colorSpace = THREE.SRGBColorSpace
@@ -204,7 +206,7 @@ house.add(bush1, bush2, bush3, bush4)
 
 const graveGeometry = new THREE.BoxGeometry(0.6, 0.8, 0.2)
 const graveMaterial = new THREE.MeshStandardMaterial({
-    color:'light gray', 
+    color:'grey', 
     map: gravesColorTexture,
     aoMap: gravesARMTexture,
     roughnessMap: gravesARMTexture,
@@ -313,7 +315,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 renderer.shadowMap.enabled = true
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
-//Cast and Receive
+// Cast and Receive
 directionalLight.castShadow = true
 ghost1.castShadow = true
 ghost2.castShadow = true
@@ -328,7 +330,7 @@ for(const grave of graves.children){
     grave.receiveShadow = true
 }
 
-//Mapping
+// Shadow Mapping
 directionalLight.shadow.mapSize.width = 256
 directionalLight.shadow.mapSize.height = 256
 directionalLight.shadow.camera.top = 8
@@ -337,6 +339,37 @@ directionalLight.shadow.camera.bottom = -8
 directionalLight.shadow.camera.left = -8
 directionalLight.shadow.camera.near = 1
 directionalLight.shadow.camera.far = 20
+
+ghost1.shadow.mapSize.width = 256
+ghost1.shadow.mapSize.height = 256
+ghost1.shadow.camera.far = 10
+
+ghost2.shadow.mapSize.width = 256
+ghost2.shadow.mapSize.height = 256
+ghost2.shadow.camera.far = 10
+
+ghost3.shadow.mapSize.width = 256
+ghost3.shadow.mapSize.height = 256
+ghost3.shadow.camera.far = 10
+
+/**
+ * Sky
+ */
+const sky = new Sky()
+sky.scale.set(100, 100, 100)
+scene.add(sky)
+
+sky.material.uniforms['turbidity'].value = 10
+sky.material.uniforms['rayleigh'].value = 3
+sky.material.uniforms['mieCoefficient'].value = 0.1
+sky.material.uniforms['mieDirectionalG'].value = 0.95
+sky.material.uniforms['sunPosition'].value.set(0.3, -0.038, -0.95)
+
+/**
+ * Fog
+ */
+
+scene.fog = new THREE.FogExp2('#02343f', 0.1)
 
 /**
  * Animate
