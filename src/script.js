@@ -63,7 +63,29 @@ roofColorTexture.wrapS = THREE.RepeatWrapping
 roofARMTexture.wrapS = THREE.RepeatWrapping
 roofNormalTexture.wrapS = THREE.RepeatWrapping
 
+const bushesColorTexture = textureLoader.load('./bushes/leaves_forest_ground_1k/leaves_forest_ground_diff_1k.jpg')
+const bushesARMTexture = textureLoader.load('./bushes/leaves_forest_ground_1k/leaves_forest_ground_arm_1k.jpg')
+const bushesNormalTexture = textureLoader.load('./bushes/leaves_forest_ground_1k/leaves_forest_ground_nor_gl_1k.jpg')
 
+bushesColorTexture.colorSpace = THREE.SRGBColorSpace
+
+bushesColorTexture.repeat.set(2, 1)
+bushesARMTexture.repeat.set(2, 1)
+bushesNormalTexture.repeat.set(2, 1)
+
+bushesColorTexture.wrapS = THREE.RepeatWrapping
+bushesARMTexture.wrapS = THREE.RepeatWrapping
+bushesNormalTexture.wrapS = THREE.RepeatWrapping
+
+const gravesColorTexture = textureLoader.load('./graves/plastered_stone_wall_1k/plastered_stone_wall_diff_1k.jpg')
+const gravesARMTexture = textureLoader.load('./graves/plastered_stone_wall_1k/plastered_stone_wall_arm_1k.jpg')
+const gravesNormalTexture = textureLoader.load('./graves/plastered_stone_wall_1k/plastered_stone_wall_nor_gl_1k.jpg')
+
+gravesColorTexture.colorSpace = THREE.SRGBColorSpace
+
+gravesColorTexture.repeat.set(0.3, 0.4)
+gravesARMTexture.repeat.set(0.3, 0.4)
+gravesNormalTexture.repeat.set(0.3, 0.4)
 
 /**
  * Geometries
@@ -130,28 +152,46 @@ door.position.y = 1
 house.add(door)
 
 const bushGeometry = new THREE.SphereGeometry(1, 16, 16)
-const bushMaterial = new THREE.MeshStandardMaterial()
+const bushMaterial = new THREE.MeshStandardMaterial({
+    color:'#ccffcc', 
+    map: bushesColorTexture,
+    aoMap: bushesARMTexture,
+    roughnessMap: bushesARMTexture,
+    metalnessMap: bushesARMTexture,
+    normalMap: bushesNormalTexture
+})
 
 const bush1 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush1.scale.set(0.5, 0.5, 0.5)
 bush1.position.set(0.8, 0.2, 2.2)
+bush1.rotation.x = -0.75
 
 const bush2 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush2.scale.set(0.25, 0.25, 0.25)
 bush2.position.set(1.4, 0.1, 2.1)
+bush2.rotation.x = -0.75
 
 const bush3 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush3.scale.set(0.4, 0.4, 0.4)
 bush3.position.set(-0.8, 0.1, 2.2)
+bush3.rotation.x = -0.75
 
 const bush4 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush4.scale.set(0.15, 0.15, 0.15)
 bush4.position.set(-1, 0.05, 2.6)
+bush4.rotation.x = -0.75
 
 house.add(bush1, bush2, bush3, bush4)
 
 const graveGeometry = new THREE.BoxGeometry(0.6, 0.8, 0.2)
-const graveMaterial = new THREE.MeshStandardMaterial()
+const graveMaterial = new THREE.MeshStandardMaterial({
+    color:'light gray', 
+    map: gravesColorTexture,
+    aoMap: gravesARMTexture,
+    roughnessMap: gravesARMTexture,
+    metalnessMap: gravesARMTexture,
+    normalMap: gravesNormalTexture
+})
 
 const graves = new THREE.Group()
 scene.add(graves)
